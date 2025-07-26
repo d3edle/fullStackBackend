@@ -83,7 +83,6 @@
 //     }
 //     return n
 //   })
-  
 //   if (!noteFound) {
 //     return response.status(404).json({ error: 'note not found' })
 //   }
@@ -102,9 +101,7 @@
 //   const body = request.body
 
 //   if (!body.content) {
-//     return response.status(400).json({ 
-//       error: 'content missing' 
-//     })
+//     return response.status(400).json({error: 'content missing'})
 //   }
 
 //   const note = new Note({
@@ -123,7 +120,7 @@
 // })
 
 
-//official code 
+//official code
 
 require('dotenv').config()
 const express = require('express')
@@ -131,15 +128,14 @@ const Note = require('./models/note')
 
 const app = express()
 
-let notes = []
 
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:  ', request.path)
-  console.log('Body:  ', request.body)
-  console.log('---')
-  next()
-}
+// const requestLogger = (request, response, next) => {
+//   console.log('Method:', request.method)
+//   console.log('Path:  ', request.path)
+//   console.log('Body:  ', request.body)
+//   console.log('---')
+//   next()
+// }
 
 
 
@@ -155,21 +151,19 @@ app.get('/api/notes', (request, response) => {
   Note.find({}).then((notes) => {
     response.json(notes)
   })
-  
 })
 
 app.get('/api/notes/:id', (request, response, next) => {
-  
   Note.findById(request.params.id)
-  .then((note) => {
-    if(note){
-      response.json(note)
-    }else{
-      console.log('168');
-      response.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+    .then((note) => {
+      if(note){
+        response.json(note)
+      }else{
+        console.log('168')
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/notes', (request, response, next) => {
@@ -184,16 +178,18 @@ app.post('/api/notes', (request, response, next) => {
   })
 
   note.save()
-  .then((savedNote) => {
-    response.json(savedNote)
-  })
-  .catch(error => next(error))
+    .then((savedNote) => {
+      response.json(savedNote)
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
     .then(result => {
+      response.json(result)
       response.status(204).end()
+
     })
     .catch(error => next(error))
 })
